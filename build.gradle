@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.1'
+
+}
+
+
+task customFatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'org.example.Main'  // Замініть your.package.name.MainClass на ваш основний клас
+    }
+    archiveBaseName = 'mynames-jar'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+
+    doLast {
+        println "Jar is completed"
+    }
+}
+
+//
+//// компілює jar
+//task customFatJar(type: Jar) {
+//    manifest {
+//        attributes 'Main-Class': 'org.example.Main'
+//    }
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+//    with jar
+//
+//    doLast {
+//        System.out.println("Jar is complited!");
+//    }
+//}
+
+// 2 step remove folder
+//tasks.register("removeFolder") {
+//    delete 'dist'
+//
+//    doLast {
+//        System.out.println("Folder DIST successufuly deleted!");
+//    }
+//}
